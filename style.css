@@ -1,3 +1,7 @@
 #root {
-  color: red;
+  color: rgb(0, 38, 255);
+}
+
+*{
+  background-color: rgb(213, 201, 233);
 }
