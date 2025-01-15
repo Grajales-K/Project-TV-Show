@@ -1,7 +1,35 @@
 #root {
-  color: rgb(0, 38, 255);
+  color: rgb(2, 3, 12);
+
 }
 
-*{
+* {
   background-color: rgb(213, 201, 233);
+
+}
+
+
+.episodes-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.episode-card {
+  width: 400px;
+  border: 5px solid #000000dd;
+  justify-items: center;
+  text-align: center;
+  padding: 10px;
+  margin: 10px;
+}
+
+.episode-card img {
+  width: 100%;
+}
+
+.episode-card h2 {
+  color: black;
+  font-size: 1.5rem;
+  padding: 10px;
 }
