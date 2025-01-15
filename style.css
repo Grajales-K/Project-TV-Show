@@ -1,13 +1,7 @@
-#root {
-  color: rgb(2, 3, 12);
-
+body{
+  background-color: rgb(200, 243, 251);
+  font-family: Arial, sans-serif;
 }
-
-* {
-  background-color: rgb(213, 201, 233);
-
-}
-
 
 .episodes-container {
   display: flex;
@@ -18,6 +12,7 @@
 .episode-card {
   width: 400px;
   border: 5px solid #000000dd;
+  border-radius: 10%;
   justify-items: center;
   text-align: center;
   padding: 10px;
@@ -26,10 +21,14 @@
 
 .episode-card img {
   width: 100%;
+  border-radius: 20%;
 }
 
 .episode-card h2 {
   color: black;
   font-size: 1.5rem;
   padding: 10px;
+}
+.episode-card:hover {
+  background-color: #6b9bda;
 }

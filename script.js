@@ -3,10 +3,6 @@ function setup() {
   makePageForEpisodes(allEpisodes);
 }
 
-// function ShowSeasonAndEpisodes (episode){
-//   const {season, number} = episodes;
-
-// }
 
 //level 100
 function makePageForEpisodes(episodesList) {
@@ -14,7 +10,6 @@ function makePageForEpisodes(episodesList) {
   const rootElem = document.getElementById("root");
 
   // Display the total number of episodes at the top of the page
-  // episodesContainer.textContent = `Got ${episodesList.length} episode(s)`;
 
   const episodesContainer = document.createElement("div");
   episodesContainer.className = "episodes-container";
