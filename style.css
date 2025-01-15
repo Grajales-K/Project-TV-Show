@@ -1,5 +1,5 @@
 body{
-  background-color: rgb(160, 238, 252);
+  background-color: rgb(214, 217, 252);
   font-family: Arial, sans-serif;
 }
 
@@ -11,7 +11,8 @@ body{
 
 .episode-card {
   width: 400px;
-  border: 5px solid #000000dd;
+  border: 3px solid #000000;
+  color: rgb(19, 6, 204);
   border-radius: 10%;
   justify-items: center;
   text-align: center;
@@ -25,12 +26,14 @@ body{
 }
 
 .episode-card h2 {
-  color: black;
+  color: rgb(19, 6, 204);
   font-size: 1.5rem;
   padding: 10px;
 }
 .episode-card:hover {
-  background-color: #6b9bda;
+  background-color: #9c57f124;
+  border: 3px solid #6404f5;
+  border-radius: 10%;
 }
 #search {
   width: 100%;
