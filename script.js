@@ -17,10 +17,7 @@ function setup() {
 const fetchAllEpisodes = async () => {
   //Fetch all episodes once
   const messageAlarm = document.getElementById("root");
-  const loadingMessage = document.createElement("h1");
-  loadingMessage.textContent = "Loading, please wait...";
-  loadingMessage.style.display = "block";
-  messageAlarm.append(loadingMessage);
+  messageAlarm.innerHTML = `<h1 style="display: block;">Loading, please wait...</h1>`;
   try {
     //Simulate a delay to test loading behavior
     await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate delay (2 seconds)
@@ -31,12 +28,9 @@ const fetchAllEpisodes = async () => {
     }
     return await response.json();
   } catch (error) {
-    const errorMessage = document.createElement("h1");
-    errorMessage.textContent = "An error occurred: " + error.message;
-    errorMessage.style.color = "red"; // Show error message
-    messageAlarm.append(errorMessage);
+    messageAlarm.innerHTML = `<h1 style="color: red;">An error occurred: " + error.message;</h1>`;
   } finally {
-    loadingMessage.style.display = "none";
+    messageAlarm.innerHTML = `<h1 style="display: none;"></h1>`;
   }
 };
 
