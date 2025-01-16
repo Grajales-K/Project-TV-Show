@@ -1,54 +1,68 @@
-body{
-  background-color: rgb(214, 217, 252);
+body {
+  background-color: #2f0243;
   font-family: Arial, sans-serif;
+  color: #00ffff;
+  text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
 .episodes-container {
+  background-color: #000;
   display: flex;
   flex-wrap: wrap;
+  gap: 1.5rem;
   justify-content: center;
+  padding: 1rem;
 }
 
 .episode-card {
-  width: 400px;
-  border: 3px solid #000000;
-  color: rgb(19, 6, 204);
-  border-radius: 10%;
-  justify-items: center;
+  width: 100%;
+  max-width: 400px;
+  border: 2px solid #1306cc;
+  background-color: #1c1c1c;
+  color: #e2e1f2;
+  border-radius: 8px;
   text-align: center;
-  padding: 10px;
-  margin: 10px;
+  padding: 15px;
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .episode-card img {
   width: 100%;
-  border-radius: 20%;
+  border-radius: 10px;
+  object-fit: cover;
 }
 
 .episode-card h2 {
-  color: rgb(19, 6, 204);
-  font-size: 1.5rem;
-  padding: 10px;
-}
-.episode-card:hover {
-  background-color: #9c57f124;
-  border: 3px solid #6404f5;
-  border-radius: 10%;
-}
-#search {
-  width: 100%;
-  max-width: 300px;
-  padding: 10px;
+  color: #71ffec;
+  font-size: 1.8rem;
   margin: 10px 0;
-  font-size: 16px;
-  border: 2px solid #3f47b3;
 }
 
+.episode-card:hover {
+  background-color: rgba(156, 87, 241, 0.2);
+  border-color: #6404f5;
+  transform: scale(1.05);
+}
+
+#search,
 #select {
   width: 100%;
   max-width: 300px;
   padding: 10px;
-  margin: 10px 0;
+  margin: 20px auto;
   font-size: 16px;
   border: 2px solid #3f47b3;
+  border-radius: 4px;
+  background-color: #1c1c1c;
+  color: #e2e1f2;
+
+}
+
+#search:focus,
+#select:focus {
+  outline: none;
+  border-color: #6404f5;
+  box-shadow: 0 0 5px #6404f5;
 }
