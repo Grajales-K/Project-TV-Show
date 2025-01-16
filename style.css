@@ -44,7 +44,7 @@ body{
   border: 2px solid #3f47b3;
 }
 
-#select {
+#selectS, #selectE {
   width: 100%;
   max-width: 300px;
   padding: 10px;

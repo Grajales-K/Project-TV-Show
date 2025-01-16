@@ -9,16 +9,22 @@
   </head>
 
   <body>
+    <div id="alarm" style="color: black; font-size: 1.2em; margin-bottom: 10px;"></div>
     <div id="searchbar">
       <label>
-        Select:<select id="select" name="select" placeholder="Select episodes ...">
-          <option value="allEpisodes">All Episodes</option>
+        Select:<select id="selectS" name="select" placeholder="Select Shows ...">
+          <option value="allShows">All Shows</option>
+        </select>
+      </label>
+      <label>
+        Select:<select id="selectE" name="select" placeholder="Select Episodes ...">
         </select>
       </label>
       <label>
         Search:<input type="text" id="search" name="search" placeholder="Search episodes ..." />
       </label>
       <p id="episodeCount"></p>
+      
     </div>
     <div id="root">
     </div>

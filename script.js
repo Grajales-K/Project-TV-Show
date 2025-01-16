@@ -1,103 +1,149 @@
-function setup() {
-  const states = { allEpisodes: [], searchTerm: "" }; // Initial searchTerm & allEpisode
 
-  fetchAllEpisodes()
-    .then((episodes) => {
-      if (episodes) {
-        states.allEpisodes = episodes;
-        render(states); //Initial render
-        createSearchTerm(states); //Setup search functionality
-      }
-    })
-    .catch((error) => {
-      console.error("Error in fetchAllEpisodes:", error.message);
-    });
-}
+const episodesStates = { all: [], searchTerm: "" }; // Initial state for episodes
+let showStates = { all: [], searchTerm: "" }; // Initial state for shows
+const dataCache = {}; // Cache for fetched data
 
-const fetchAllEpisodes = async () => {
-  //Fetch all episodes once
-  const messageAlarm = document.getElementById("root");
-  messageAlarm.innerHTML = `<h1 style="display: block;">Loading, please wait...</h1>`;
+// Fetch data with caching
+async function fetchWithCache(url) {
+  const messageAlarm = document.getElementById("alarm");
+  messageAlarm.textContent = "Loading, please wait...";
   try {
-    //Simulate a delay to test loading behavior
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate delay (2 seconds)
-
-    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return await response.json();
-  } catch (error) {
-    messageAlarm.innerHTML = `<h1 style="color: red;">An error occurred: " + error.message;</h1>`;
-  } finally {
-    messageAlarm.innerHTML = `<h1 style="display: none;"></h1>`;
+  if (dataCache[url]) {
+    messageAlarm.textContent = ""; // Clear message if data is cached
+    return dataCache[url];
   }
-};
-
-function render(stateList) {
-  //Filter episodes based on the searchTerm (case-sensitive)
-  const filteredEpisode = stateList.allEpisodes.filter(
-    (episode) =>
-      episode.name.toLowerCase().includes(stateList.searchTerm.toLowerCase()) ||
-      episode.summary.toLowerCase().includes(stateList.searchTerm.toLowerCase())
-  );
-  makePageForEpisodes(filteredEpisode);
-  episodeCounter(filteredEpisode.length, stateList.allEpisodes.length);
-  selectEpisodes(stateList.allEpisodes);
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch data from ${url}`);
+  }
+  const data = await response.json();
+    dataCache[url] = data;
+    messageAlarm.textContent = "";
+    return data;
+} catch(error){
+    messageAlarm.style.color = "red";
+    messageAlarm.textContent = `An error occurred: ${error.message}`;
+    throw error;
 }
-//Make a select list and link to the episode
-function selectEpisodes(episodeList) {
-  const selectList = document.getElementById("select");
-  for (episode of episodeList) {
-    const optionList = document.createElement("option");
-    optionList.value = episode.id;
-    const episodeSeason = String(episode.season).padStart(2, "0");
-    const episodeNumber = String(episode.number).padStart(2, "0");
-    optionList.textContent = `S${episodeSeason}E${episodeNumber} - ${episode.name} `;
-    selectList.append(optionList);
+}
+
+// Setup function
+async function setup() {
+  try{
+  const shows = await fetchWithCache("https://api.tvmaze.com/shows");
+  if (shows) {
+    showStates.all = shows;
+    render(showStates); // Initial render for shows
+    selectShows(showStates.all); // Populate show dropdown
   }
+  } catch (error) {
+    console.error("Error fetching shows:", error);
+  }
+}
+
+
+// Populate show dropdown
+function selectShows(showList) {
+  const selectList = document.getElementById("selectS");
+  showList.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+  
+  for (show of showList) {
+    const option = document.createElement("option");
+    option.value = show.id;
+    option.textContent = show.name;
+    selectList.append(option);
+  };
+  selectList.addEventListener("change", async (event) => {
+    const selectedId = event.target.value;
+
+    if (selectedId === "allShows") {
+      render(showStates);
+      // episodeCounter(episodeList.length, episodeList.length);
+    } else {
+      try{
+      const episodes = await fetchWithCache(`https://api.tvmaze.com/shows/${selectedId}/episodes`);
+      if (episodes) {
+        episodesStates.all = episodes;
+        render(episodesStates);  // Render episodes
+        selectEpisodes(episodesStates.all); // Populate episode dropdown
+      }
+    }catch(error){
+      console.error("Error fetching episodes:", error);
+    }
+    }
+  });
+}
+
+// Populate episode dropdown
+function selectEpisodes(episodeList) {
+  const selectList = document.getElementById("selectE");
+  selectList.innerHTML = ""; // Clear existing options
+
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "allEpisodes";
+  defaultOption.textContent = "All Episodes";
+  selectList.append(defaultOption);
+
+  for (episode of episodeList) {
+    const option = document.createElement("option");
+    option.value = episode.id;
+    option.textContent = `S${String(episode.season).padStart(2, "0")}E${String(episode.number).padStart(2, "0")} - ${episode.name} `;
+    selectList.append(option);
+  };
   selectList.addEventListener("change", (event) => {
     const selectedId = event.target.value;
 
     if (selectedId === "allEpisodes") {
-      makePageForEpisodes(episodeList);
-      episodeCounter(episodeList.length, episodeList.length);
+      render(episodesStates); // Render all episodes
     } else {
       const selectEpisode = Array(
-        episodeList.find((episode) => episode.id == selectedId)
+        episodesStates.all.find((episode) => episode.id == selectedId)
       );
-      makePageForEpisodes(selectEpisode);
-      episodeCounter(1, episodeList.length);
+      render(selectEpisode);  // Render selected episode
     }
   });
 }
 
-function createSearchTerm(stateList) {
-  const searchBox = document.getElementById("search");
-  searchBox.addEventListener("input", (event) => {
-    // Add an event listener to check user input
-    stateList.searchTerm = event.target.value; //Update the searchTerm in state
-    render(stateList); //Re-render with the updated state
-  });
+// Render the page
+function render(stateList) {
+  //Filter based on the searchTerm (case-sensitive)
+  const filteredElements= stateList.all.filter(
+    (element) =>
+      element.name.toLowerCase().includes(stateList.searchTerm.toLowerCase()) ||
+      element.summary.toLowerCase().includes(stateList.searchTerm.toLowerCase())
+  );
+  makePageForEpisodes(filteredElements);
+  episodeCounter(filteredElements.length, stateList.all.length);
+
 }
-// Function to update how many episodes are displayed
+
+// Update episode counter
 function episodeCounter(filteredCount, totalCount) {
   const countElement = document.getElementById("episodeCount");
   countElement.textContent = `Displaying ${filteredCount}/${totalCount} episodes.`;
 }
 
+// Create search functionality
+function createSearchTerm(stateList) {
+  const searchBox = document.getElementById("search");
+  searchBox.addEventListener("input", (event) => {
+    
+    stateList.searchTerm = event.target.value; //Update the searchTerm in state
+    render(stateList); //Re-render with the updated state
+  });
+}
+
+// Create episode cards
 function makePageForEpisodes(episodesList) {
-  // Get the root element from the DOM where the episodes will be displayed
   const rootElem = document.getElementById("root");
-  rootElem.textContent = ``; //clearing textContent
+  rootElem.textContent = ""; //clearing textContent
 
   const episodesContainer = document.createElement("div");
   episodesContainer.className = "episodes-container";
 
-  // Loop through each episode in the episodesList
   for (const episode of episodesList) {
     const episodeCard = document.createElement("div");
-    episodeCard.className = "episode-card"; // add class for card for styling
+    episodeCard.className = "episode-card"; 
 
     episodeCard.innerHTML = `
     <h2>${episode.name} (S${String(episode.number).padStart(2, "0")}E${String(
