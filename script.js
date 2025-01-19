@@ -132,13 +132,20 @@ function episodeCounter(filteredCount, totalCount) {
 }
 
 // Create search functionality
-function createSearchTerm(stateList) {
+function showSearchBox(stateList) {
   const searchBox = document.getElementById("search");
   searchBox.value = "";
   searchBox.addEventListener("input", (event) => {
-    
-    stateList.searchTerm = event.target.value.trim(); //Update the searchTerm in state
-    render(stateList); //Re-render with the updated state
+    const searchTerm = event.target.value; //Update the searchTerm in state
+    const filteredElements = stateList.filter(
+    (element) => element.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    element.summary?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    element.genres.some((genre) =>
+      genre.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    //element.some((genre) => genre.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+    makePageForShows(filteredElements);
   });
 }
 
