@@ -125,6 +125,7 @@ function render(stateList) {
 
 }
 
+
 // Update episode counter
 function episodeCounter(filteredCount, totalCount) {
   const countElement = document.getElementById("episodeCount");
