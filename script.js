@@ -5,39 +5,43 @@ const dataCache = {}; // Cache for fetched data
 
 // Fetch data with caching
 async function fetchWithCache(url) {
-  const messageAlarm = document.getElementById("alarm");
-  messageAlarm.textContent = "Loading, please wait...";
+  const rootElem = document.getElementById("root");
+  rootElem.innerHTML = "<p>Loading, please wait....</p>";
   try {
-  if (dataCache[url]) {
-    messageAlarm.textContent = ""; // Clear message if data is cached
-    return dataCache[url];
-  }
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch data from ${url}`);
-  }
-  const data = await response.json();
+    if (dataCache[url]) {
+      rootElem.innerHTML = "";; // Clear message if data is cached
+      return dataCache[url];
+    }
+    const response = await fetch(url);
+    if (!response.ok) {
+      rootElem.innerHTML = `<p>Failed to fetch data from ${url}</p>`;
+    }
+    const data = await response.json();
     dataCache[url] = data;
-    messageAlarm.textContent = "";
+    rootElem.innerHTML = "";
     return data;
-} catch(error){
-    messageAlarm.style.color = "red";
-    messageAlarm.textContent = `An error occurred: ${error.message}`;
-    throw error;
-}
+  } catch (error) {
+    rootElem.innerHTML = `<p>An error occurred: ${error.message}</p>`;
+  }
 }
 
 // Setup function
 async function setup() {
-  try{
-  const shows = await fetchWithCache("https://api.tvmaze.com/shows");
-  if (shows) {
-    showStates.all = shows;
-    render(showStates); // Initial render for shows
-    selectShows(showStates.all); // Populate show dropdown
-    createSearchTerm(episodesStates);
-  }
+  try {
+    const shows = await fetchWithCache("https://api.tvmaze.com/shows");
+    if (shows) {
+      showStates = shows;
+      makePageForShows(showStates);
+      selectShowDropDown(showStates);
+      showSearchBox(showStates);
+      episodeDropVisible(false);
+      showDropVisible(true);
+      episodeCounterVisible(false)
+      
+    }
   } catch (error) {
+    const rootElem = document.getElementById("root");
+    rootElem.innerHTML = `<p>Error fetching shows: ${error}</p>`;
     console.error("Error fetching shows:", error);
   }
 }
