@@ -137,6 +137,21 @@ function episodeCounter(filteredCount, totalCount) {
   countElement.textContent = `Displaying ${filteredCount}/${totalCount} episodes.`;
 }
 
+function episodeSearchBox(stateList) {
+  const searchBox = document.getElementById("search");
+  searchBox.value = "";
+  searchBox.addEventListener("input", (event) => {
+    const searchTerm = event.target.value; //Update the searchTerm in state
+    const filteredElements = stateList.filter(
+      (element) =>
+        element.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        element.summary.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    makePageForEpisodes(filteredElements);
+    episodeCounter(filteredElements.length, stateList.length);
+  });
+}
+
 // Create search functionality
 function showSearchBox(stateList) {
   const searchBox = document.getElementById("search");
