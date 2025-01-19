@@ -42,9 +42,8 @@ async function setup() {
   }
 }
 
-
 // Populate show dropdown
-function selectShows(showList) {
+function selectShowDropDown(showList) {
   const selectList = document.getElementById("selectS");
   selectList.innerHTML = ""; // Clear existing options
 
@@ -53,36 +52,46 @@ function selectShows(showList) {
   defaultOption.value = "allShows";
   defaultOption.textContent = "All Shows";
   selectList.append(defaultOption);
-  
-  showList.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-  
+
+  showList.sort((a, b) =>
+    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+  );
+
   for (show of showList) {
     const option = document.createElement("option");
     option.value = show.id;
     option.textContent = show.name;
     selectList.append(option);
-  };
+  }
   selectList.addEventListener("change", async (event) => {
-    const selectedId = event.target.value;
+    const selectedValue = event.target.value;
 
-    if (selectedId === "allShows") {
-      render(showStates);
-      // episodeCounter(episodeList.length, episodeList.length);
+    if (selectedValue === "allShows") {
+      makePageForShows(showStates);
     } else {
-      try{
-      const episodes = await fetchWithCache(`https://api.tvmaze.com/shows/${selectedId}/episodes`);
-      if (episodes) {
-        episodesStates.all = episodes;
-        render(episodesStates);  // Render episodes
-        selectEpisodes(episodesStates.all); // Populate episode dropdown
+      try {
+        const episodes = await fetchWithCache(
+          `https://api.tvmaze.com/shows/${selectedValue}/episodes`
+        );
+        if (episodes) {
+          makePageForEpisodes(episodes)
+          episodeCounter(episodes.length, episodes.length)
+          episodeSearchBox(episodes); // Render episodes
+          selectDropDownEpisodes(episodes); // Populate episode dropdown
+          backToShowsButton(true);
+          episodeDropVisible(true);
+          showDropVisible(false);
+          episodeCounterVisible(true)
+          
+  
+        }
+      } catch (error) {
+        const rootElem = document.getElementById("root");
+        rootElem.innerHTML = `<p>Error fetching episodes: ${error}</p>`;
       }
-    }catch(error){
-      console.error("Error fetching episodes:", error);
-    }
     }
   });
 }
-
 
 // Populate episode dropdown
 function selectDropDownEpisodes(episodeList) {
