@@ -247,6 +247,19 @@ function backToShowsButton(status) {
   });
 }
 
+function episodeDropVisible(status) {
+  const episodeListVisible = document.getElementById("selectE");
+  episodeListVisible.style.display = status ? "block" : "none";
+}
+function showDropVisible(status) {
+  const showListVisible = document.getElementById("selectS");
+  showListVisible.style.display = status ? "block" : "none";
+}
+function episodeCounterVisible(status) {
+  const counterVisible = document.getElementById("episodeCount");
+  counterVisible.style.display = status ? "block" : "none";
+}
+
 
 // Call the setup function when the page loads
 window.onload = setup;
