@@ -183,8 +183,7 @@ function makePageForShows(showsList) {
           showDropVisible(false);
           episodeCounterVisible(true);
           
-          
-  
+      
         }
       } catch (error) {
         const rootElem = document.getElementById("root");
@@ -226,6 +225,15 @@ function makePageForEpisodes(episodesList) {
   // Append the container card to the root
   rootElem.append(episodesContainer);
 }
+
+function backToShowsButton(status) {
+  const backToShowsButton = document.getElementById("back-to-shows");
+  backToShowsButton.style.display = status ? "block" : "none";
+  backToShowsButton.addEventListener("click", () => {
+    setup();
+  });
+}
+
 
 // Call the setup function when the page loads
 window.onload = setup;
