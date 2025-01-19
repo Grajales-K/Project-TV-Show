@@ -83,8 +83,9 @@ function selectShows(showList) {
   });
 }
 
+
 // Populate episode dropdown
-function selectEpisodes(episodeList) {
+function selectDropDownEpisodes(episodeList) {
   const selectList = document.getElementById("selectE");
   selectList.innerHTML = ""; // Clear existing options
 
@@ -96,35 +97,26 @@ function selectEpisodes(episodeList) {
   for (episode of episodeList) {
     const option = document.createElement("option");
     option.value = episode.id;
-    option.textContent = `S${String(episode.season).padStart(2, "0")}E${String(episode.number).padStart(2, "0")} - ${episode.name} `;
+    option.textContent = `S${String(episode.season).padStart(2, "0")}E${String(
+      episode.number
+    ).padStart(2, "0")} - ${episode.name} `;
     selectList.append(option);
-  };
+  }
   selectList.addEventListener("change", (event) => {
-    const selectedId = event.target.value;
+    const selectedValue = event.target.value;
 
-    if (selectedId === "allEpisodes") {
-      render(episodesStates); // Render all episodes
+    if (selectedValue === "allEpisodes") {
+      makePageForEpisodes(episodeList); // Render all episodes
+      episodeCounter(episodeList.length, episodeList.length)
     } else {
-     const selectedEpisode = episodesStates.all.find((episode) => episode.id == selectedId);
-      render({ all: [selectedEpisode], searchTerm: "" }); // Render selected episode
+      const selectedEpisode = episodeList.find(
+        (episode) => episode.id == selectedValue
+      );
+      makePageForEpisodes([selectedEpisode]); // Render selected episode
+      episodeCounter(1, episodeList.length)
     }
   });
 }
-
-// Render the page
-function render(stateList) {
-  //Filter based on the searchTerm (case-sensitive)
-  const filteredElements = stateList.all.filter(
-    (element) =>
-      element.name.toLowerCase().includes(stateList.searchTerm.toLowerCase()) ||
-      element.summary.toLowerCase().includes(stateList.searchTerm.toLowerCase())
-  );
-  console.log(filteredElements)
-  makePageForEpisodes(filteredElements);
-  episodeCounter(filteredElements.length, stateList.all.length);
-
-}
-
 
 // Update episode counter
 function episodeCounter(filteredCount, totalCount) {
