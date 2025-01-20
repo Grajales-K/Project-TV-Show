@@ -9,22 +9,25 @@
   </head>
 
   <body>
-    <div id="searchbar">
+    <div class="searchbar" >
       <label>
-        Select Show:<select id="selectS" class="select" name="select"></select>
+     <select id="selectS" class="select" name="select"></select>
       </label>
       <label>
-        Select Episode:<select id="selectE" class="select" name="select"></select>
+        <select id="selectE"  class="select" name="select"></select>
       </label>
       <label>
-        Search:<input type="text" id="search"  class="select" name="search" placeholder="Search episodes ..." />
+        <input type="text" id="search"  class="select" name="search" placeholder="Search here ..." />
       </label>
       <p id="episodeCount"></p>
       <h2 id="alarm" style="color: black; font-size: 1.2em; margin-bottom: 10px;"></h2>
     </div>
+    <nav>
+      <button id="back-to-shows" style="display: none;">Back to Shows</button>
+    </nav>
     <div id="root">
     </div>
-    
+
     <!-- Loads YOUR javascript code -->
     <script src="script.js"></script>
   <footer>
